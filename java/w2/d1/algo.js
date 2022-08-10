@@ -230,7 +230,6 @@ insert(newVal) {
         return null;
     }
     var runner = this.root;
-    var forwardRunner = runner
     while(runner != null){
         if(runner.data == newVal){
             console.log("Tree already contains value.");
