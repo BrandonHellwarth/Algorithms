@@ -212,6 +212,80 @@ range(startNode = this.root) {
     var min = runnerLeft.data;
     return max - min;
 }
+
+// ****************************************************************************
+  // DAY 3
+  // ****************************************************************************
+
+/**
+   * Inserts a new node with the given newVal in the right place to preserver
+   * the order of this tree.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {number} newVal The data to be added to a new node.
+   * @returns {BinarySearchTree} This tree.
+   */
+insert(newVal) {
+    if(this.isEmpty()){
+        return null;
+    }
+    var runner = this.root;
+    var forwardRunner = runner
+    while(runner != null){
+        if(runner.data == newVal){
+            console.log("Tree already contains value.");
+            return null;
+        }
+        if(runner.data > newVal){
+            if(runner.left == null){
+                runner.left = new BSTNode(newVal);
+                return runner;
+            }
+            runner = runner.left;
+        }
+        if(runner.data < newVal){
+            if(runner.right == null){
+                runner.right = new BSTNode(newVal);
+                return runner;
+            }
+            runner = runner.right;
+        }
+    }
+}
+
+/**
+    * Inserts a new node with the given newVal in the right place to preserver
+    * the order of this tree.
+    * - Time: O(?).
+    * - Space: O(?).
+    * @param {number} newVal The data to be added to a new node.
+    * @param {Node} curr The node that is currently accessed from the tree as
+    *    the tree is being traversed.
+    * @returns {BinarySearchTree} This tree.
+    */
+insertRecursive(newVal, curr = this.root) {
+    if(this.isEmpty()){
+        return null;
+    }
+    if(curr.data == newVal){
+        console.log("Tree already contains value.");
+        return null;
+    }
+    if(curr.data > newVal){
+        if(curr.left == null){
+            curr.left = new BSTNode(newVal);
+            return curr;
+        }
+        return this.insertRecursive(newVal, curr.left);
+    }
+    if(curr.data < newVal){
+        if(curr.right == null){
+            curr.right = new BSTNode(newVal);
+            return curr;
+        }
+        return this.insertRecursive(newVal, curr.right);
+    }
+}
 }
 //     // Logs this tree horizontally with the root on the left.
 //     print(node = this.root, spaceCnt = 0, spaceIncr = 10) {
@@ -272,4 +346,4 @@ threeLevelTree.root.right.left = new BSTNode(13);
 const newTree = new BinarySearchTree();
 newTree.root = new BSTNode(10);
 newTree.root.right = new BSTNode(13);
-console.log(newTree.range());
+console.log(threeLevelTree.insertRecursive(14));
