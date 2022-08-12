@@ -343,23 +343,62 @@ toArrPostorder(node = this.root, vals = []) {
     * @returns {BinarySearchTree} This tree.
     */
 
+// ****************************************************************************
+  // DAY 5
+  // ****************************************************************************
+
+/**
+   * Recursively counts the total number of nodes in this tree.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {Node} node The current node during the traversal of this tree.
+   * @returns {number} The total number of nodes.
+   */
+size(node = this.root) {
+    if(node){
+        return 1 + this.size(node.left) + this.size(node.right);
+    }
+    return 0;
 }
-//     // Logs this tree horizontally with the root on the left.
-//     print(node = this.root, spaceCnt = 0, spaceIncr = 10) {
-//     if (!node) {
-//         return;
-//     }
 
-//     spaceCnt += spaceIncr;
-//     this.print(node.right, spaceCnt);
+/**
+    * Calculates the height of the tree which is based on how many nodes from
+    * top to bottom (whichever side is taller).
+    * - Time: O(?).
+    * - Space: O(?).
+    * @param {Node} node The current node during traversal of this tree.
+    * @returns {number} The height of the tree.
+    */
+height(node = this.root) {
+    if(node){
+        var left = 1 + this.height(node.left);
+        var right = 1 + this.height(node.right);
+        return left > right ? left : right;
+    }
+    return 0;
+}
 
-//     console.log(
-//         " ".repeat(spaceCnt < spaceIncr ? 0 : spaceCnt - spaceIncr) +
-//         `${node.data}`
-//     );
-
-//     this.print(node.left, spaceCnt);
-// }
+/**
+    * Determines if this tree is a full tree. A full tree is a tree where every
+    * node has both a left and a right except for the leaf nodes (last nodes)
+    * - Time: O(?).
+    * - Space: O(?).
+    * @param {Node} node The current node during traversal of this tree.
+    * @returns {boolean} Indicates if this tree is full.
+    */
+isFull(node = this.root) {
+    if(node === null){
+        return false;
+    }
+    if(node.right == null && node.left == null){
+        return true;
+    }
+    if(node.left != null && node.right != null){
+        return this.isFull(node.left) && this.isFull(node.right);//both have to be true to return true
+    }
+    return false;
+}
+}
 
 const emptyTree = new BinarySearchTree();
 const oneNodeTree = new BinarySearchTree();
@@ -403,4 +442,4 @@ threeLevelTree.root.right.left = new BSTNode(13);
 const newTree = new BinarySearchTree();
 newTree.root = new BSTNode(10);
 newTree.root.right = new BSTNode(13);
-console.log(threeLevelTree.toArrPreorder());
+console.log(threeLevelTree.isFull());
