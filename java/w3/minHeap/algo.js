@@ -74,11 +74,85 @@ class MinHeap {
 
       this.printHorizontalTree(parentIdx * 2, spaceCnt);
     }
+// ======================================================
+  // DAY 2
+  // ======================================================
+
+/**
+   * Extracts the min num from the heap and then re-orders the heap to
+   * maintain order so the next min is ready to be extracted.
+   * 1. Save the first node to a temp var.
+   * 2. Pop last node off and set idx1 equal to the popped value.
+   * 3. Iteratively swap the old last node that is now at idx1 with it's
+   *    smallest child IF the smallest child is smaller than it.
+   * - Time: O(log n) logarithmic due to shiftDown.
+   * - Space: O(1) constant.
+   * @returns {?number} The min number or null if empty.
+   */
+extract() {
+    if(this.heap.length < 2){
+        return null;
+    }
+    if(this.heap.length < 3){
+        var temp = this.heap[1];
+        this.heap.pop();
+        console.log(this.heap);
+        return temp;
+    }
+    if(this.heap.length < 4){
+        var temp = this.heap[1];
+        this.heap[1] = this.heap[i*2];
+        this.heap.pop();
+        return temp;
+    }
+    var temp = this.heap[1];
+    var last = this.heap[this.heap.length-1];
+    this.heap.pop();
+    this.heap[1] = last;
+    console.log(this.heap);
+    var i = 1;
+    //creating left and right child variables here would help with confusion instead of using a formula everytime we want left or right child
+    while(this.heap[i] > this.heap[i*2] || this.heap[i] > this.heap[(i*2)+1]){
+        if(this.heap[i*2] < this.heap[(i*2)+1]){
+        this.heap[1] = this.heap[i*2];
+        this.heap[i*2] = last;
+        i = i*2;
+        }
+        else{
+            this.heap[1] = this.heap[(i*2)+1];
+            this.heap[(i*2)+1] = last;
+            i = (i*2)+1;
+        }
+    }
+    console.log(this.heap);
+    return temp;
 }
 
+/**
+   * Logs the tree horizontally with the root on the left and the index in
+   * parenthesis using reverse inorder traversal.
+   */
+printHorizontalTree(parentIdx = 1, spaceCnt = 0, spaceIncr = 10) {
+    if (parentIdx > this.heap.length - 1) {
+    return;
+    }
+
+    spaceCnt += spaceIncr;
+    this.printHorizontalTree(parentIdx * 2 + 1, spaceCnt);
+
+    console.log(
+    " ".repeat(spaceCnt < spaceIncr ? 0 : spaceCnt - spaceIncr) +
+        `${this.heap[parentIdx]} (${parentIdx})`
+    );
+
+    this.printHorizontalTree(parentIdx * 2, spaceCnt);
+}
+}
 const newMinHeap = new MinHeap;
 newMinHeap.insert(5);
 newMinHeap.insert(8);
 newMinHeap.insert(12);
 newMinHeap.insert(17);
-console.log(newMinHeap.insert(7));
+newMinHeap.insert(15);
+newMinHeap.insert(13);
+console.log(newMinHeap.extract());
