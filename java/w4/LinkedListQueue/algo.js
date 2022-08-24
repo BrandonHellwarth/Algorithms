@@ -1,4 +1,85 @@
 /**
+ * Class to represent a stack using an array to store the stacked items.
+ * Follows a LIFO (Last In First Out) order where new items are stacked on
+ * top (back of array) and removed items are removed from the top / back.
+ */
+class Stack {
+    /**
+     * The constructor is executed when instantiating a new Stack() to construct
+     * a new instance.
+     * @returns {Stack} This new Stack instance is returned without having to
+     *    explicitly write 'return' (implicit return).
+     */
+    constructor(items = []) {
+    this.items = items;
+    }
+
+    /**
+     * Adds a new given item to the top / back of this stack.
+     * - Time: O(1) constant.
+     * - Space: O(1) constant.
+     * @param {any} item The new item to be added to the top / back.
+     * @returns {number} The new length of this stack.
+     */
+    push(item) {
+    this.items.push(item);
+    return this.size();
+    }
+
+    /**
+     * Removes the top / last item from this stack.
+     * - Time: O(1) constant.
+     * - Space: O(1) constant.
+     * @returns {any} The removed item or undefined if this stack was empty.
+     */
+    pop() {
+    return this.items.pop();
+    }
+
+    /**
+     * Retrieves the top / last item from this stack without removing it.
+     * - Time: O(1) constant.
+     * - Space: O(1) constant.
+     * @returns {any} The top / last item of this stack.
+     */
+    peek() {
+    return this.items[this.items.length - 1];
+    }
+
+    /**
+     * Returns whether or not this stack is empty.
+     * - Time: O(1) constant.
+     * - Space: O(1) constant.
+     * @returns {boolean}
+     */
+    isEmpty() {
+    return this.items.length === 0;
+    }
+
+    /**
+     * Returns the size of this stack.
+     * - Time: O(1) constant.
+     * - Space: O(1) constant.
+     * @returns {number} The length.
+     */
+    size() {
+    return this.items.length;
+    }
+
+    /**
+     * Logs the items as a space separated string.
+     * - Time: O(n) linear.
+     * - Space: O(n) linear.
+     * @returns {string} The same string that is logged.
+     */
+    print() {
+    const str = this.items.join(" ");
+    console.log(str);
+    return str;
+    }
+}
+
+/**
  * Class to represent a queue using an array to store the queued items.
  * Follows a FIFO (First In First Out) order where new items are added to the
  * back and items are removed from the front.
@@ -71,15 +152,139 @@ class Queue {
         return this.items.length;
     }
     
+/**
+   * TODO: implement this method
+   * Compares this queue to another given queue to see if they are equal.
+   * Avoid indexing the queue items directly via bracket notation, use the
+   * queue methods instead for practice.
+   * Use no extra array or objects.
+   * The queues should be returned to their original order when done.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {Queue} q2 The queue to be compared against this queue.
+   * @returns {boolean} Whether all the items of the two queues are equal and
+   *    in the same order.
+   */
+compareQueues(q2) {
+    if(this.size() != q2.size()){
+        return false;
+    }
+    var inc = 0;
+    for(var i=0;i<this.size();i++){
+        if(this.items[i] == q2.items[i]){
+            inc++;
+        }
+    }
+    if(inc == this.size()){
+        return true;
+    }
+    return false;
 }
 
-// const newQueue = new Queue;
-// newQueue.enqueue("bill");
-// newQueue.enqueue("bob");
-// newQueue.enqueue("ben");
-// newQueue.enqueue("borg");
-// newQueue.dequeue();
-// console.log(newQueue);
+/**
+  * TODO: implement this method
+  * Determines if the queue is a palindrome (same items forward and backwards).
+  * Avoid indexing queue items directly via bracket notation, instead use the
+  * queue methods for practice.
+  * Use only 1 stack as additional storage, no other arrays or objects.
+  * The queue should be returned to its original order when done.
+  * - Time: O(?).
+  * - Space: O(?).
+  * @returns {boolean}
+  */
+isPalindrome() { //needs simplification
+    const newStack = new Stack;
+    if(this.size() % 2 != 0){
+        var size = Math.floor(this.size()/2);
+        for(var i=0;i<size;i++){
+            newStack.push(this.front());
+            this.dequeue();
+        }
+        var middle = this.front();
+        this.dequeue();
+        console.log(newStack);
+        console.log(this);
+        var inc = 0;
+        for(var i=0;i<size;i++){
+            if(this.front() == newStack.peek()){
+                this.dequeue();
+                this.enqueue(newStack.pop());
+                inc++;
+            }
+        }
+        for(var i=0;i<size;i++){
+            newStack.push(this.front());
+            this.enqueue(this.dequeue());
+        }
+        newStack.push(middle);
+        console.log(newStack);
+        console.log(this);
+        for(var i=0;i<size;i++){
+            newStack.push(this.front());
+            this.dequeue();
+        }
+        var stackSize = newStack.size();
+        for(var i=0;i<stackSize;i++){
+            this.enqueue(newStack.peek());
+            newStack.pop();
+        }
+        console.log(newStack);
+        console.log(this);
+        if(inc == size){
+            return true;
+        }
+        return false;
+    }
+    var size = this.size()/2;
+    for(var i=0;i<size;i++){
+        newStack.push(this.front());
+        this.dequeue();
+    }
+    console.log(newStack);
+    console.log(this);
+    var inc = 0;
+    for(var i=0;i<size;i++){
+        if(this.front() == newStack.peek()){
+            this.enqueue(this.dequeue());
+            newStack.pop();
+            inc++;
+        }
+    }
+    for(var i=0;i<size;i++){
+        newStack.push(this.front());
+        this.dequeue();
+    }
+    var stackSize = newStack.size();
+    for(var i=0;i<stackSize;i++){
+        this.enqueue(newStack.pop);
+    }
+    if(inc == size){
+        console.log(newStack);
+        console.log(this);
+        return true;
+    }
+    console.log(newStack);
+    console.log(this);
+    return false;
+}
+}
+const newQueue1 = new Queue;
+newQueue1.enqueue("bill");
+newQueue1.enqueue("bob");
+newQueue1.enqueue("ted");
+// newQueue1.enqueue("joe");
+newQueue1.enqueue("ted");
+newQueue1.enqueue("bob");
+newQueue1.enqueue("bill");
+console.log(newQueue1);
+console.log(newQueue1.isPalindrome());
+// const newQueue2 = new Queue;
+// newQueue2.enqueue("bill");
+// newQueue2.enqueue("ben");
+// newQueue2.enqueue("bob");
+// newQueue2.enqueue("borg");
+// console.log(newQueue2);
+// console.log(newQueue1.compareQueues(newQueue2));
 
 class QueueNode {
     constructor(data) {
@@ -176,6 +381,6 @@ class LinkedListQueue {
     }
 }
 
-const newListQueue = new LinkedListQueue;
-newListQueue.enqueue("bill");
-console.log(newListQueue);
+// const newListQueue = new LinkedListQueue;
+// newListQueue.enqueue("bill");
+// console.log(newListQueue);
