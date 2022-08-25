@@ -166,19 +166,26 @@ class Queue {
    *    in the same order.
    */
 compareQueues(q2) {
-    if(this.size() != q2.size()){
+    if (this.size() !== q2.size()) {
         return false;
     }
-    var inc = 0;
-    for(var i=0;i<this.size();i++){
-        if(this.items[i] == q2.items[i]){
-            inc++;
+    let count = 0;
+    let isEqual = true;
+    const len = this.size();
+
+    while (count < len) {
+        const dequeued1 = this.dequeue();
+        const dequeued2 = q2.dequeue();
+
+        if (dequeued1 !== dequeued2) {
+        isEqual = false;
         }
+
+        this.enqueue(dequeued1);
+        q2.enqueue(dequeued2);
+        count++;
     }
-    if(inc == this.size()){
-        return true;
-    }
-    return false;
+    return isEqual;
 }
 
 /**
@@ -192,92 +199,84 @@ compareQueues(q2) {
   * - Space: O(?).
   * @returns {boolean}
   */
-isPalindrome() { //needs simplification
-    const newStack = new Stack;
-    if(this.size() % 2 != 0){
-        var size = Math.floor(this.size()/2);
-        for(var i=0;i<size;i++){
-            newStack.push(this.front());
-            this.dequeue();
+isPalindrome() { 
+    let isPalin = true;
+    const stack = new Stack(),
+    len = this.size();
+    for (let i = 0; i < len; i++) {
+        let dequeued = this.dequeue();
+        stack.push(dequeued);
+        // add it back so the queue items and order is restored at the end
+        this.enqueue(dequeued);
+    }
+    for (let i = 0; i < len; i++) {
+        let dequeued = this.dequeue();
+        let popped = stack.pop();
+        if (popped !== dequeued) {
+            isPalin = false;
         }
-        var middle = this.front();
-        this.dequeue();
-        console.log(newStack);
-        console.log(this);
-        var inc = 0;
-        for(var i=0;i<size;i++){
-            if(this.front() == newStack.peek()){
-                this.dequeue();
-                this.enqueue(newStack.pop());
-                inc++;
+        // add it back so the queue items and order is restored at the end
+        this.enqueue(dequeued);
+    }
+    return isPalin;
+}
+/**
+   * TODO: Implement this method
+   * Determines whether the sum of the left half of the queue items is equal to
+   * the sum of the right half. Avoid indexing the queue items directly via
+   * bracket notation, use the queue methods instead for practice.
+   * Use no extra array or objects.
+   * The queue should be returned to it's original order when done.
+   * - Time: O(n^2) quadratic, n = queue length. Quadratic due to dequeue on an
+   *     array queue being O(n).
+   * - Space: O(1) constant.
+   * @returns {boolean} Whether the sum of the left and right halves is equal.
+   */
+isSumOfHalvesEqual() {
+    var length = this.size();
+    var leftSum = 0;
+    var rightSum = 0;
+    console.log(length);
+    for(var i=0;i<length;i++){
+        if(i < Math.floor(length/2)){
+            leftSum = leftSum + this.front();
+        }
+        if(length % 2 == 0){
+            if(i >= length/2){
+                rightSum = rightSum + this.front();
             }
         }
-        for(var i=0;i<size;i++){
-            newStack.push(this.front());
-            this.enqueue(this.dequeue());
+        else{
+            if(i > Math.floor(length/2)){
+                rightSum = rightSum + this.front();
+            }
         }
-        newStack.push(middle);
-        console.log(newStack);
-        console.log(this);
-        for(var i=0;i<size;i++){
-            newStack.push(this.front());
-            this.dequeue();
-        }
-        var stackSize = newStack.size();
-        for(var i=0;i<stackSize;i++){
-            this.enqueue(newStack.peek());
-            newStack.pop();
-        }
-        console.log(newStack);
-        console.log(this);
-        if(inc == size){
-            return true;
-        }
-        return false;
+        this.enqueue(this.dequeue());
     }
-    var size = this.size()/2;
-    for(var i=0;i<size;i++){
-        newStack.push(this.front());
-        this.dequeue();
-    }
-    console.log(newStack);
-    console.log(this);
-    var inc = 0;
-    for(var i=0;i<size;i++){
-        if(this.front() == newStack.peek()){
-            this.enqueue(this.dequeue());
-            newStack.pop();
-            inc++;
-        }
-    }
-    for(var i=0;i<size;i++){
-        newStack.push(this.front());
-        this.dequeue();
-    }
-    var stackSize = newStack.size();
-    for(var i=0;i<stackSize;i++){
-        this.enqueue(newStack.pop);
-    }
-    if(inc == size){
-        console.log(newStack);
-        console.log(this);
+    if(leftSum == rightSum){
         return true;
     }
-    console.log(newStack);
-    console.log(this);
     return false;
 }
 }
-const newQueue1 = new Queue;
-newQueue1.enqueue("bill");
-newQueue1.enqueue("bob");
-newQueue1.enqueue("ted");
-// newQueue1.enqueue("joe");
-newQueue1.enqueue("ted");
-newQueue1.enqueue("bob");
-newQueue1.enqueue("bill");
-console.log(newQueue1);
-console.log(newQueue1.isPalindrome());
+
+const newQueue = new Queue;
+newQueue.enqueue(1);
+newQueue.enqueue(2);
+newQueue.enqueue(3);
+newQueue.enqueue(4);
+newQueue.enqueue(5);
+console.log(newQueue.isSumOfHalvesEqual());
+// const newQueue1 = new Queue;
+// newQueue1.enqueue("bill");
+// newQueue1.enqueue("bob");
+// newQueue1.enqueue("ted");
+// // newQueue1.enqueue("joe");
+// newQueue1.enqueue("ted");
+// newQueue1.enqueue("bob");
+// newQueue1.enqueue("bill");
+// console.log(newQueue1);
+// console.log(newQueue1.isPalindrome());
 // const newQueue2 = new Queue;
 // newQueue2.enqueue("bill");
 // newQueue2.enqueue("ben");
@@ -285,6 +284,39 @@ console.log(newQueue1.isPalindrome());
 // newQueue2.enqueue("borg");
 // console.log(newQueue2);
 // console.log(newQueue1.compareQueues(newQueue2));
+
+
+/**
+ * Class to represent a Queue but is implemented using two stacks to store the
+ * queued items without using any other objects or arrays to store the items.
+ * Retains the FIFO (First in First Out) ordering when adding / removing items.
+ */
+class TwoStackQueue {
+constructor() {
+    this.stack1 = new Stack();
+    this.stack2 = new Stack();
+}
+
+/**
+   * TODO: implement this method
+   * Adds a new item to the back of the queue.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {any} item To be added.
+   * @returns {number} The new number of items in the queue.
+   */
+enqueue(item) {}
+
+/**
+   * TODO: implement this method
+   * Removes the next item in the line / queue.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @returns {any} The removed item.
+   */
+dequeue() {}
+}
+
 
 class QueueNode {
     constructor(data) {
