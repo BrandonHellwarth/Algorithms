@@ -51,34 +51,44 @@ const nums4 = [2, 1];
  * @returns {Array<number>} The idx where left section of smaller items ends.
  */
 function partition(nums = [], left = 0, right = nums.length - 1) {
-    var pivotIndex = Math.floor(nums.length / 2);
-    var pivotValue = nums[pivotIndex];
-    nums.splice(pivotIndex, 1);
-    for(var i=0;i<=nums.length - 1;i++){
-        if(nums[i] == pivotValue){
-            nums.splice(i, 1);
-            i--;
-        }
+    const midIdx = Math.floor((left + right) / 2);
+    const pivotVal = nums[midIdx];
+    const tempPivotIdx = right;
+
+  // Swap the pivot to the end of the section being partitioned so its
+  // position can be kept track of, then move it last to its final position.
+    [nums[midIdx], nums[tempPivotIdx]] = [nums[tempPivotIdx], nums[midIdx]];
+
+  // Skip over the pivot that was moved to the end so it stays there for now.
+    right = tempPivotIdx - 1;
+
+  // Look for a num on the left and on the right that both need to be moved to
+  // the other side so one swap can move both of them to the correct side.
+    while (true) {
+    // Move leftIdx until we find a num that is out of place.
+    while (nums[left] < pivotVal) {
+        left += 1;
     }
-    right = nums.length - 1;
-    while(left <= right){
-        while(nums[left] < pivotValue){
-            left++;
-        }
-        while(nums[right] >= pivotValue){
-            right--;
-        }
-        if(left > right){
-            break;
-        }
-        var temp = nums[left];
-        nums[left] = nums[right];
-        nums[right] = temp;
+
+    // Move rightIdx until we find a num that is out of place.
+    while (nums[right] > pivotVal) {
+        right -= 1;
     }
-    var temp1 = nums[left];
-    nums[left] = pivotValue;
-    nums.push(temp1);
-    console.log(nums);
-    return left;
+
+    // All nums have been iterated over, partitioning is complete.
+    if (left >= right) {
+      // Swap the pivot to it's final location.
+        [nums[tempPivotIdx], nums[left]] = [nums[left], nums[tempPivotIdx]];
+        return left;
+    }
+
+    // Swap the two out of place nums so they will both be on the correct side.
+    [nums[left], nums[right]] = [nums[right], nums[left]];
+
+    // After swapping, we're done with this pair, move on.
+    left += 1;
+    right -= 1;
+    }
 }
-console.log(partition(nums3));
+
+module.exports = {partition, test : "hello"};
