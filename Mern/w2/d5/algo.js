@@ -104,6 +104,7 @@ function findConsqSums(nums, targetSum) {
     var sumsIndex = 0;
     for(var i=0;i<nums.length;i++){
         var count = 0;
+        //conditionals would run faster here since all this is doing is holding a pointer
         for(var j=i;j<nums.length;j++){
             count += nums[j];
             if(count === targetSum && j != 0){
@@ -139,3 +140,8 @@ function findConsqSums(nums, targetSum) {
 }
 
 console.log(findConsqSums(nums5, sum5));
+
+
+for(let i = 0, j=Array.length-1; i< Array.length ; i++){
+
+}
