@@ -77,19 +77,8 @@ loop1:
    * - Time: O(?).
    * - Space: O(?).
    */
-function findObjectsFunctional(criteria, collection) {
-    let keys = Object.keys(criteria);
-    let values = Object.values(criteria);
-loop1:
-    for(let i=0;i<collection.length;i++){
-        for(let j in keys){
-            if(collection[i][keys[j]] != values[j]){
-                collection.splice(i, 1);
-                i--;
-                continue loop1;
-            }
-        }
-    }
-    return collection;
-}
+const findObjectsFunctional = (criteria, collection) =>
+    collection.filter((item) =>
+    Object.keys(criteria).every((key) => item[key] === criteria[key])
+);
 console.log(findObjectsFunctional(searchCriteria1, items));
